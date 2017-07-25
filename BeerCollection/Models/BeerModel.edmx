@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="beer_collectionModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="beer_collectionModelStoreContainer">
+    <EntitySet Name="Beers" EntityType="beer_collectionModel.Store.Beers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BeerRatings" EntityType="beer_collectionModel.Store.BeerRatings" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BeerTypes" EntityType="beer_collectionModel.Store.BeerTypes" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="BeerBeerRating" Association="beer_collectionModel.Store.BeerBeerRating">
+      <End Role="Beer" EntitySet="Beers" />
+      <End Role="BeerRating" EntitySet="BeerRatings" />
+    </AssociationSet>
+    <AssociationSet Name="BeerBeerType" Association="beer_collectionModel.Store.BeerBeerType">
+      <End Role="Beer" EntitySet="Beers" />
+      <End Role="BeerType" EntitySet="BeerTypes" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Beers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="150" />
+    <Property Name="AverageRating" Type="float" Nullable="true" />
+    <Property Name="BeerTypeId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BeerRatings">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Rating" Type="int" Nullable="false" />
+    <Property Name="BeerId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BeerTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="150" />
+  </EntityType>
+  <Association Name="BeerBeerRating">
+    <End Role="Beer" Type="beer_collectionModel.Store.Beers" Multiplicity="1" />
+    <End Role="BeerRating" Type="beer_collectionModel.Store.BeerRatings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Beer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BeerRating">
+        <PropertyRef Name="BeerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BeerBeerType">
+    <End Role="Beer" Type="beer_collectionModel.Store.Beers" Multiplicity="*" />
+    <End Role="BeerType" Type="beer_collectionModel.Store.BeerTypes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="BeerType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Beer">
+        <PropertyRef Name="BeerTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="beer_collectionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Beer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AverageRating" Type="Double" />
+          <NavigationProperty Name="BeerRatings" Relationship="beer_collectionModel.BeerBeerRating" FromRole="Beer" ToRole="BeerRating" />
+          <NavigationProperty Name="BeerType" Relationship="beer_collectionModel.BeerBeerType" FromRole="Beer" ToRole="BeerType" />
+          <Property Name="BeerTypeId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BeerRating">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Beer" Relationship="beer_collectionModel.BeerBeerRating" FromRole="BeerRating" ToRole="Beer" />
+          <Property Name="BeerId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BeerType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Beers" Relationship="beer_collectionModel.BeerBeerType" FromRole="BeerType" ToRole="Beer" />
+        </EntityType>
+        <EntityContainer Name="beer_collectionEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Beers" EntityType="Self.Beer" />
+          <EntitySet Name="BeerRatings" EntityType="Self.BeerRating" />
+          <EntitySet Name="BeerTypes" EntityType="Self.BeerType" />
+          <AssociationSet Name="BeerBeerRating" Association="beer_collectionModel.BeerBeerRating">
+            <End Role="Beer" EntitySet="Beers" />
+            <End Role="BeerRating" EntitySet="BeerRatings" />
+          </AssociationSet>
+          <AssociationSet Name="BeerBeerType" Association="beer_collectionModel.BeerBeerType">
+            <End Role="Beer" EntitySet="Beers" />
+            <End Role="BeerType" EntitySet="BeerTypes" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="BeerBeerRating">
+          <End Type="beer_collectionModel.Beer" Role="Beer" Multiplicity="1" />
+          <End Type="beer_collectionModel.BeerRating" Role="BeerRating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Beer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BeerRating">
+              <PropertyRef Name="BeerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BeerBeerType">
+          <End Type="beer_collectionModel.Beer" Role="Beer" Multiplicity="*" />
+          <End Type="beer_collectionModel.BeerType" Role="BeerType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="BeerType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Beer">
+              <PropertyRef Name="BeerTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="beer_collectionModelStoreContainer" CdmEntityContainer="beer_collectionEntities">
+    <EntitySetMapping Name="Beers">
+      <EntityTypeMapping TypeName="IsTypeOf(beer_collectionModel.Beer)">
+        <MappingFragment StoreEntitySet="Beers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="AverageRating" ColumnName="AverageRating" />
+          <ScalarProperty Name="BeerTypeId" ColumnName="BeerTypeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BeerRatings">
+      <EntityTypeMapping TypeName="IsTypeOf(beer_collectionModel.BeerRating)">
+        <MappingFragment StoreEntitySet="BeerRatings">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="BeerId" ColumnName="BeerId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BeerTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(beer_collectionModel.BeerType)">
+        <MappingFragment StoreEntitySet="BeerTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
